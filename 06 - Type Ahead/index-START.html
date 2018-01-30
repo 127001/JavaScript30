@@ -14,9 +14,61 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-</script>
-  </body>
+    // te vullen const met array van steden
+    const cities = []
+
+    // met fetch doe je promise en de promise bevat een json(promise)
+    fetch(endpoint)
+      .then(blob => blob.json()
+      // .then(data => console.log(data))
+      // magic. Een spread om de data in de cities te pushen, een voor een dus.
+      .then(data => cities.push(...data)));
+
+    // find cities and states
+    function findMatching(wordToMatch, cities) {
+      return cities.filter(place => {
+        // do magic met regex
+
+        const regex = new RegExp(wordToMatch, 'gi');
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    }
+
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // listen to the input
+    function displayMatches() {
+      // console.log(this.value);
+      const matchArray = findMatching(this.value, cities);
+         
+      // map geeft een array terug, dus komma's in het resultaat
+      const html = matchArray.map(place => {
+        
+        // met een regex match kan de invoer worden vervangen door een span met dezelfde invoer
+        const regex = new RegExp(this.value, 'gi');
+        const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>` )
+        const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>` )
+
+        return `
+          <li>${cityName}, ${stateName} ${numberWithCommas(place.population)}</li>
+        `;
+      }).join('');  // de komma fix je met de join
+      suggestions.innerHTML = html;
+      console.log(matchArray);
+    }
+
+    // get input and output
+    const searchInput = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    // listen
+    searchInput.addEventListener('keyup', displayMatches);
+    
+  </script>
+</body>
 </html>
