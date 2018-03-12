@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Document</title>
 </head>
-<body>
+<body> 
 
   <div class="site-wrap">
 
@@ -57,6 +57,28 @@
         if (callNow) func.apply(context, args);
       };
     }
+
+    const sliderImages = document.querySelectorAll('img.slide-in');
+
+    function checkSlide(e) {
+      // console.log(e);
+      sliderImages.forEach(sliderImage => {
+        // halverwege de afbeelding
+        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+        // onderkant van de afbeelding
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+
+        if (isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', debounce(checkSlide, 60));
 
   </script>
 
