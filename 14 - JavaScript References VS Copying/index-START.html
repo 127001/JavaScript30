@@ -32,9 +32,11 @@
 
     // and we want to make a copy of it.
     const team = players;
-    console.log(players, team);
+    console.log(players, team); 
 
     // You might think we can just do something like this:
+    team[3] = 'Dinkie';
+    console.log('Na dinkie: ' + players, team); 
 
     // however what happens when we update that array?
 
@@ -43,28 +45,69 @@
     // oh no - we have edited the original array too!
 
     // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+    
 
     // So, how do we fix this? We take a copy instead!
+    const team2 = players.slice(); // empty slice will make a copy
 
     // one way
 
     // or create a new array and concat the old one in
+    const team3 = [].concat(players);
 
     // or use the new ES6 Spread
+    const team4 = [...players];
+
+    const team5 = Array.from(players); 
 
     // now when we update it, the original one isn't changed
 
     // The same thing goes for objects, let's say we have a person object
 
     // with Objects
+    const person = {
+      name: 'Pietje Puk',
+      age: 80
+    };
 
     // and think we make a copy:
+    const captain = person;
+    captain.number = 77;
+    console.log(person);
 
     // how do we take a copy instead?
+    const cap2 = Object.assign({},person, {number: 99});
+    console.log(cap2);
 
     // We will hopefully soon see the object ...spread
+    const cap3 = {...person};
+    cap3.number = 22;
+    console.log(cap3);
 
     // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const piet = {
+      name: 'Piet',
+      age: 80, 
+      social: {
+        twitter: '@pietjepuk',
+        facebook: 'pietje.puk'
+      }
+    }
+    console.clear();
+    console.log(piet);
+
+    const dev = Object.assign({}, piet);
+    dev.social.twitter = '@coolman';
+    dev.age = 60;
+    console.log(dev.social, dev.age);
+    console.log(piet.social, piet.age);
+
+    // Don't try this at home!!!
+    const dev2 = JSON.parse(JSON.stringify(piet));
+    dev2.social.twitter = '@pietman';
+
+    console.log(dev2.social);
+    console.log(piet.social);
 
   </script>
 
